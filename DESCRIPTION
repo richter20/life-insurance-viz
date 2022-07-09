@@ -1,0 +1,15 @@
+Package: life.insurance.viz
+Title: Life insurance visualisation tools.
+Version: 0.1
+Authors@R: c(
+    person("Rick", "Graham", "rickgraham20@gmail.com", role = c("aut", "cre"))
+  )
+Author: Rick Graham [aut, cre]
+Maintainer: Rick Graham <rickgraham20@gmail.com>
+Depends: 
+    R (>= 3.1.0)
+Imports:
+    tidyverse
+Description: A package that simulates and visualises life insurance data
+License: GPL (>= 2)
+URL: https://github.com/richter20/life-insurance-viz
