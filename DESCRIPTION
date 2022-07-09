@@ -7,9 +7,15 @@ Authors@R: c(
 Author: Rick Graham [aut, cre]
 Maintainer: Rick Graham <rickgraham20@gmail.com>
 Depends: 
-    R (>= 3.1.0)
+    R (>= 3.1.0),
+    tidyverse,
+	zoo,
+	lubridate,
+	magrittr,
+	rlang,
+	data.table
 Imports:
-    tidyverse
 Description: A package that simulates and visualises life insurance data
 License: GPL (>= 2)
 URL: https://github.com/richter20/life-insurance-viz
+RoxygenNote: 7.0.2
