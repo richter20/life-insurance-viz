@@ -12,7 +12,12 @@ simulate_incidence <- function(){ ## We may choose to parametrise later, e.g. va
   ## Define global variables TODO: make these arguments to the function
   EI_start_date <- "2017-07-01"
   EI_end_date <- "2022-06-01"
-  save_loc <- 
+  save_loc <- "~/life_viz_outputs/data"
+  
+  ## Check that the save location exists and is writable
+  if(!dir.exists(save_loc)){
+    dir.create(save_loc, recursive = T)
+  }
   
   ## Incidence rates
   male_month_inc <- 1-(1-0.05)^(1/12) ## An annual rate of 5%
@@ -57,8 +62,8 @@ simulate_incidence <- function(){ ## We may choose to parametrise later, e.g. va
   )
   
   ## Save output
-  write.csv2(all_pol, "data/exposure.csv")
-  write.csv2(claims, "data/incidence.csv")
+  fwrite(all_pol, file.path(save_loc, "exposure.csv"))
+  fwrite(claims, file.path(save_loc,"incidence.csv"))
 }
 
 
