@@ -20,8 +20,8 @@ simulate_incidence <- function(){ ## We may choose to parametrise later, e.g. va
   }
   
   ## Incidence rates
-  male_month_inc <- 1-(1-0.005)^(1/12) ## An annual rate of 0.5%
-  female_month_inc <- 1-(1-0.003)^(1/12) ## An annual rate of 0.3%
+  male_month_inc <- 1-(1-0.05)^(1/12) ## An annual rate of 5%
+  female_month_inc <- 1-(1-0.03)^(1/12) ## An annual rate of 3%
   
   ## Policyholders at start of experience investigation
   pol_init <- data.frame(
