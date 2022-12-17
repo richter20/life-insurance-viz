@@ -11,7 +11,7 @@ simulate_incidence <- function(){ ## We may choose to parametrise later, e.g. va
   
   ## Define global variables TODO: make these arguments to the function
   EI_start_date <- "2017-07-01"
-  EI_end_date <- "2022-06-01"
+  EI_end_date <- "2022-06-30"
   save_loc <- "~/life_viz_outputs/data"
   
   ## Check that the save location exists and is writable
@@ -20,8 +20,8 @@ simulate_incidence <- function(){ ## We may choose to parametrise later, e.g. va
   }
   
   ## Incidence rates
-  male_month_inc <- 1-(1-0.05)^(1/12) ## An annual rate of 5%
-  female_month_inc <- 1-(1-0.03)^(1/12) ## An annual rate of 3%
+  male_month_inc <- 1-(1-0.005)^(1/12) ## An annual rate of 0.5%
+  female_month_inc <- 1-(1-0.003)^(1/12) ## An annual rate of 0.3%
   
   ## Policyholders at start of experience investigation
   pol_init <- data.frame(
@@ -55,14 +55,21 @@ simulate_incidence <- function(){ ## We may choose to parametrise later, e.g. va
   
   ## Create claims dataset
   claims <- all_pol %>% filter(incidence_ind == 1)
-  claims %<>% mutate(months_until_incidence = floor(runif(dim(claims)[1],0,1)*total_exposure_months), ## For simplicity, assume uniform distribution of incidence TODO: Add seasonality
-                     incidence_month = exposure_start %m+% months(months_until_incidence),
-                     number_mths_to_report = sample(3:12, dim(claims)[1], replace = T), ## Assume it takes between 3 and 12 months for claims to be reported
-                     report_month = incidence_month + months(number_mths_to_report)
+  claims %<>% mutate(months_until_incidence = floor(runif(dim(claims)[1],0,1)*total_exposure_months), ## Using a uniform distribution, for simplicity
+                     incidence_month = exposure_start %m+% months(months_until_incidence + 1) -1,
+                     number_mths_to_report = sample(1:24, dim(claims)[1], replace = T), ## Assume it takes between 1 and 24 months for claims to be reported
+                     report_month = incidence_month %m+% months(number_mths_to_report)
+  )
+  
+  ## Join claims back into policy data
+  policy_clms <- merge(all_pol, claims, all.x = T)
+  
+  ## Adjust policy dates
+  policy_clms %<>% mutate(total_exposure_months = interval(exposure_start, coalesce(incidence_month,as.Date(EI_end_date))) %/% months(1)
   )
   
   ## Save output
-  fwrite(all_pol, file.path(save_loc, "exposure.csv"))
+  fwrite(policy_clms, file.path(save_loc, "exposure.csv"))
   fwrite(claims, file.path(save_loc,"incidence.csv"))
 }
 
