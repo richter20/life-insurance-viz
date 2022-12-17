@@ -13,6 +13,9 @@ Depends:
 	lubridate,
 	magrittr,
 	rlang,
+	scales,
+	ggthemes,
+	shadowtext,
 	data.table
 Imports:
 Description: A package that simulates and visualises life insurance data
