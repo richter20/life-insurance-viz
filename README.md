@@ -18,4 +18,4 @@ plot_incidence_development(aggregate_incidence)
 ```
 
 ## Example output
-![incidence_development_plot](https://user-images.githubusercontent.com/38058003/208231146-97a8b01c-81e9-4e78-973b-097a5cc7c2e0.jpeg)
+![claims_dev](https://user-images.githubusercontent.com/38058003/212869689-3b3cb71d-1c76-4cdc-8230-f1c2c504284d.jpeg)
