@@ -4,7 +4,7 @@
 ## Define function ----
 aggregate_exposure <- function( key_vars = c("fy", "fy_period_label"), ## Key variables for final extract
                                 aggregate_by = c(), ## Variable names you wish to aggregate interactively by
-                                summary_vars = c("expected_inc", "incidence_ind", "incidence_reported", "period_exposure_months"),
+                                summary_vars = c("expected_inc", "incidence_ind", "incidence_reported", "IBNR", "period_exposure_months"),
                                 months_to_aggregate = 6 ## Number of months in each aggregation period, between 1 and 12
     ){
   
@@ -89,9 +89,6 @@ aggregate_exposure <- function( key_vars = c("fy", "fy_period_label"), ## Key va
   
   exposure_rp_2 %<>% select(-fy_period_label, -period_exposure_end) ## Remove these so they do not conflict with the join
   
-  ## Join in IBNR factors and create IBNR variable
-  ## TODO
-  
   ## Left join incidence to exposure to duplicate records for each reporting period
   incidence_2 <- merge(exposure_rp_2, incidence, all.x = T, by = "fy") %>% 
     filter(fy_period_label %in% incidence$fy_period_label)
@@ -100,9 +97,18 @@ aggregate_exposure <- function( key_vars = c("fy", "fy_period_label"), ## Key va
   incidence_2 %<>% mutate(incidence_reported = case_when(incidence_ind == 1 & report_month <= period_exposure_end ~ 1,
                                                          T ~ 0))
   
+  ## Join in IBNR factors and create IBNR variable
+  incidence_2 %<>% mutate(months_dev = ifelse(incidence_reported == 1
+                                                    , pmin(interval(incidence_month, period_exposure_end) %/% months(1),24)
+                                                    , NA_real_))
+  incidence_ibnr <- merge(incidence_2, IBNR_factors, all.x = T, by = "months_dev")
+  incidence_ibnr %<>% mutate(IBNR = ifelse(incidence_reported == 0
+                                       , 0
+                                       , incidence_reported * cum_prob - 1))
+  
   ## Aggregate
   
-  aggregate_incidence <- incidence_2 %>% 
+  aggregate_incidence <- incidence_ibnr %>% 
     group_by_at(key_vars) %>%
     summarise_at(vars(all_of(summary_vars)), sum
     )

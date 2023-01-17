@@ -16,7 +16,7 @@ plot_incidence <- function(incidence_data_input){
   
   incidence_data <- copy(incidence_data_input)
   setnames(incidence_data, "incidence_reported", "Claims")
-  incidence_data %<>% mutate(IBNR = incidence_ind - Claims )
+#  incidence_data %<>% mutate(IBNR = incidence_ind - Claims )
   
   incidence_data %>% mutate(fy_period_label = factor(fy_period_label, ordered = T))
   
@@ -45,7 +45,7 @@ plot_incidence_development <- function(incidence_data_input){
   
   incidence_data <- copy(incidence_data_input)
   setnames(incidence_data, "incidence_reported", "Claims")
-  incidence_data %<>% mutate(IBNR = incidence_ind - Claims )
+#  incidence_data %<>% mutate(IBNR = incidence_ind - Claims )
   
   incidence_data %>% mutate(fy_period_label = factor(fy_period_label, ordered = T))
   
